@@ -34,7 +34,7 @@ class FaceRecognition:
             self.known_face_encodings.append(face_encoding)
             self.known_face_names.append(image)
         #print(self.known_face_names)
-    @lru_cache
+    
     def run_recognition(self):
         video_capture = cv2.VideoCapture(1)
         if not video_capture.isOpened():
