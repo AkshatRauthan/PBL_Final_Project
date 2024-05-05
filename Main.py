@@ -13,7 +13,7 @@ def face_confidence(face_distance, face_match_thresshold = 0.6):
     if face_distance > face_match_thresshold:
         return str(round(linear_val * 100, 2)) + '%'
     else:
-        return str((linear_val + ((1.0 - linear_val) * math.pow((linear_val - 0.5) * 2, 0.2))) * 100) + '%'
+        return str(round((linear_val + ((1.0 - linear_val) * math.pow((linear_val - 0.5) * 2, 0.2))) * 100,2)) + '%'
     
 class FaceRecognition:
     face_location = []
@@ -36,7 +36,7 @@ class FaceRecognition:
         #print(self.known_face_names)
     
     def run_recognition(self):
-        video_capture = cv2.VideoCapture(0)
+        video_capture = cv2.VideoCapture(1)
         if not video_capture.isOpened():
             sys.exit(" Video Source Is Not Found...\n")
         
