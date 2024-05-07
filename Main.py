@@ -1,11 +1,9 @@
-from functools import lru_cache
 import cv2
 import face_recognition
 import numpy as np
 import os, sys, time
 import math
 
-@lru_cache
 def face_confidence(face_distance, face_match_thresshold = 0.6):
     range = (1.0 - face_match_thresshold)
     linear_val = (1 - face_distance) / range
@@ -33,16 +31,24 @@ class FaceRecognition:
 
             self.known_face_encodings.append(face_encoding)
             self.known_face_names.append(image)
-        #print(self.known_face_names)
     
     def run_recognition(self):
-        video_capture = cv2.VideoCapture(1)
+        a = 0               
+        video_capture = cv2.VideoCapture(a)
         if not video_capture.isOpened():
             sys.exit(" Video Source Is Not Found...\n")
-        
         while True:
-            ret, frame = video_capture.read()
+            if a == 1 and cv2.waitKey(1) == ord('s'):
+                print("\nSwitching Input Device To Primary Camera......")
+                a = 0
+                video_capture = cv2.VideoCapture(a)
 
+            if a == 0 and cv2.waitKey(1) == ord('s'):
+                print("\nSwitching Input Device To External Camera......")
+                a = 1
+                video_capture = cv2.VideoCapture(a)
+
+            ret, frame = video_capture.read()
             if self.process_current_frame :
                 small_frame = cv2.resize(frame, (0, 0), fx=0.25, fy=0.25)
                 rgb_small_frame = small_frame[:, :, ::-1] # Convertion Into RGB format
@@ -78,6 +84,7 @@ class FaceRecognition:
                 cv2.rectangle(frame, (left, top), (right, bottom), (0, 255, 0), 2)
                 cv2.rectangle(frame, (left, bottom - 35), (right, bottom), (0, 255, 0), 2)
                 cv2.putText(frame, name, (left + 6, bottom -6), cv2.FONT_HERSHEY_DUPLEX, 0.8, (225, 225,225), 1)
+                time.sleep(0.2)
 
             cv2.imshow('Face Recognition', frame)
 
